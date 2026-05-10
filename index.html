@@ -374,6 +374,37 @@
     margin-right: 4px;
   }
 
+  /* ====== EMAIL TABS (selector de perfil) ====== */
+  .email-tabs {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 18px;
+    padding: 6px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+  }
+  .email-perfil-tab {
+    flex: 1;
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: 6px;
+    padding: 10px 14px;
+    color: var(--muted);
+    font-size: 12px;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    transition: all 0.15s;
+    letter-spacing: 0.3px;
+  }
+  .email-perfil-tab:hover { color: var(--text); }
+  .email-perfil-tab.active {
+    background: var(--surface3);
+    border-color: var(--border-strong);
+    color: var(--cyan);
+  }
+
   /* ====== FILE DROP ====== */
   .file-drop {
     display: block;
@@ -931,8 +962,14 @@
   </section>
 
   <section class="panel hidden" id="panel-message">
-    <h2><span class="marker"></span>Modelo de email</h2>
-    <p class="helper">Mesma mensagem de email, personalizada para cada contato. As mensagens de WhatsApp seguem 3 templates SPIN automáticos por perfil (advocacia, contabilidade, sindicato), não precisam ser editadas aqui.</p>
+    <h2><span class="marker"></span>Modelo de email — SPIN por perfil</h2>
+    <p class="helper">Cada perfil de contato tem um email SPIN próprio (situação → problema → implicação → solução). Edite o template do perfil ativo abaixo. As mensagens de WhatsApp ficam num bloco separado e seguem 3 variações automáticas por perfil.</p>
+
+    <div class="email-tabs">
+      <button class="email-perfil-tab active" data-perfil="advocacia">⚖ Advocacia</button>
+      <button class="email-perfil-tab" data-perfil="contabilidade">📊 Contabilidade</button>
+      <button class="email-perfil-tab" data-perfil="sindicato">✊ Sindicato</button>
+    </div>
 
     <div class="msg-vars">
       <div class="label-tag">Variáveis disponíveis</div>
@@ -945,21 +982,14 @@
     </div>
 
     <div class="field-label">Assunto do email</div>
-    <input type="text" id="subject" value="Apresentação — Cálculos trabalhistas para {{razao}}">
+    <input type="text" id="subject">
 
     <div class="field-label">Corpo da mensagem</div>
-    <textarea id="msg-template">Prezados,
-
-Sou {{eu_titulo}} e atendo escritórios e sindicatos em todo o Brasil com cálculos de liquidação de sentença, impugnações, embargos e laudos periciais. Identifiquei a {{razao}} ({{cidade}}/{{uf}}) e gostaria de me apresentar como possível parceiro técnico.
-
-Preparo cálculos em PJeCalc, planilhas auditáveis e pareceres técnicos no padrão TRT, com retorno rápido e custo competitivo. Posso enviar amostras de trabalhos anteriores caso haja interesse.
-
-Atenciosamente,
-{{eu_nome}}
-{{eu_titulo}}</textarea>
+    <textarea id="msg-template"></textarea>
 
     <div class="main-actions" style="margin-top: 20px;">
       <button class="btn primary" id="btn-save-msg">Salvar e voltar</button>
+      <button class="btn secondary" id="btn-restore-msg">↺ Restaurar SPIN padrão deste perfil</button>
       <button class="btn secondary" id="btn-back-from-msg">Voltar sem salvar</button>
     </div>
   </section>

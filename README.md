@@ -1,19 +1,31 @@
 # Prospect & Cia. v3 — Pós em Estratégias de Cálculo Trabalhista
 
-App web 100% offline para alunos da Pós em Estratégias de Cálculo Trabalhista (Smart Calc) gerirem prospecção comercial dual-channel (email + WhatsApp).
+App web 100% offline para alunos da Pós em Estratégias de Cálculo Trabalhista (Smart Calc) gerirem prospecção comercial dual-channel (email + WhatsApp), com mensagens SPIN específicas por perfil de contato.
 
-## Novidades da v3
+## Estrutura SPIN por perfil
 
-- **WhatsApp**: detecção automática de celular (11 dígitos com 8 ou 9 após DDD), botão `wa.me` com mensagem SPIN pré-preenchida
-- **Detecção automática de perfil**: cada contato é classificado como Advocacia, Contabilidade ou Sindicato pela razão social, e recebe template SPIN específico (3 variações por perfil em rotação)
-- **Identidade do calculista**: campo dedicado para nome + título profissional, persistido no localStorage e usado como assinatura nas mensagens
-- **Score combinado**: `max(scoreEmail, scoreWa)` — o melhor canal define a categoria do contato. Um contato com email morto mas celular válido entra em PRATA pelo WhatsApp
-- **Filtro de lote**: mostra contatos com pelo menos um canal Ouro/Prata/Bronze
-- **Migração automática v2→v3**: bases existentes são migradas no primeiro carregamento
+Tanto o **email** quanto o **WhatsApp** têm 3 templates próprios — um para cada perfil detectado automaticamente pela razão social:
+
+### Advocacia
+**Dor**: Escritório investe na fase de conhecimento mas aceita o cálculo da liquidação sem impugnação técnica fundamentada. Resultado: cliente recebe menos do que tinha direito, e o honorário sobre o êxito reduz proporcionalmente. A janela de correção (impugnação à sentença de liquidação) se fecha rápido — depois disso, só embargos e agravo, com ônus argumentativo muito maior.
+
+### Contabilidade
+**Dor**: Quando uma empresa cliente da contabilidade é citada em ação trabalhista, ela precisa de cálculos jurídicos especializados (provisão, acordo, impugnação, liquidação) que fogem do escopo da contabilidade comum. A empresa busca fora — geralmente por indicação do advogado da outra ponta — e a contabilidade perde a posição de fornecedor único no momento crítico.
+
+### Sindicato
+**Dor**: O sindicato vence a ação coletiva no mérito, mas cada um dos centenas de substituídos precisa promover cumprimento de sentença individual com cálculo próprio e impugnação aos valores apresentados pela ré. Sem suporte técnico massivo nessa fase, o juiz homologa o cálculo padronizado da ré, e a categoria recebe na ponta uma fração da vitória coletiva.
+
+## Funcionamento
+
+- **Email**: 1 template SPIN longo por perfil (5-7 parágrafos) com Situação → Problema → **Implicação concreta** → Solução
+- **WhatsApp**: 3 variações médias (4-5 parágrafos) por perfil em rotação automática
+- **Editor de email**: tabs no topo do painel pra alternar entre os 3 perfis e editar cada um individualmente
+- **Restaurar padrão**: botão para voltar ao SPIN padrão do perfil ativo
+- **Sem números**: as mensagens usam dor qualitativa ("parcela importante", "valores significativos", "uma fração da vitória") em vez de percentuais checáveis
 
 ## Identidade visual
 
-Padronizada com os demais apps do projeto da Pós: paleta dark cyan (`#070B0B` + accent `#2DFFD4`), tipografia system + monospace, badges retangulares, botões com cantos 8px. WhatsApp recebe accent verde nativo (`#25D366`).
+Padronizada com os demais apps do projeto: paleta dark cyan (`#070B0B` + accent `#2DFFD4`), tipografia system + monospace, badges retangulares, botões com cantos 8px. WhatsApp ganha accent verde nativo (`#25D366`).
 
 ## Arquitetura
 
@@ -23,22 +35,20 @@ Padronizada com os demais apps do projeto da Pós: paleta dark cyan (`#070B0B` +
 
 ## Painéis
 
-1. **Dashboard** — 6 stats (total / bons / WhatsApp / contatados / pendentes / pulados) + barra de qualidade + 6 botões de ação
-2. **Identidade** — cadastro do nome + título do calculista
+1. **Dashboard** — 6 stats (total / bons / WhatsApp / contatados / pendentes / pulados) + barra de qualidade + 6 botões
+2. **Identidade** — cadastro do nome + título profissional do calculista
 3. **Importar** — file drop com preview de 4 contadores (novos / com WA / duplicados / sem email)
-4. **Mensagem (email)** — assunto + corpo com 6 variáveis (`{{razao}}`, `{{cidade}}`, `{{uf}}`, `{{cnpj}}`, `{{eu_nome}}`, `{{eu_titulo}}`)
+4. **Editor de email** — tabs por perfil + editor de assunto/corpo + restaurar padrão
 5. **Prospecção** — slider + cards com badges duais (Email + WhatsApp) e dois botões de ação por canal
 
 ## Card de contato
 
-Cada card mostra:
-
-- Razão social, CNPJ, cidade/UF
-- Tag de perfil detectado (cores distintas por categoria)
+- Razão social + CNPJ + cidade/UF
+- Tag de perfil detectado (cores distintas)
 - Badge da qualidade do email (Ouro/Prata/Bronze/Ruim/Morto)
 - Badge "✓ WhatsApp" verde ou "sem WhatsApp" cinza
 - Badge geral combinado (qualidade do melhor canal)
-- Mensagem de email expansível
+- Mensagem de email expansível (puxada do template do perfil)
 - Mensagem de WhatsApp expansível (só se tem WA)
 - 6 botões: Email · WhatsApp · Copiar email · Copiar WA · Contatado · Pular
 
@@ -47,28 +57,35 @@ Cada card mostra:
 - **Sindicato**: `sindic`, `federação`, `confederação`, `associação dos/de trabalhadores/profissionais/empregados`
 - **Contabilidade**: `contab`, `contad`, `escritório fiscal/contábil`, `assessoria fiscal/contábil`
 - **Advocacia**: `advoc`, `advog`, `OAB`, `sociedade de advogados`
-- **Default**: advocacia (perfil mais comum)
+- **Default**: advocacia
 
-## Detecção de celular
+## Detecção de celular (WhatsApp)
 
-- 11 dígitos brasileiros (DDD + 8 ou 9 + 8 dígitos) → tem WhatsApp
+- 11 dígitos brasileiros com 8 ou 9 após DDD → tem WhatsApp
 - 13 dígitos começando com 55 → tem WhatsApp
 - Restante (fixos, 0800, números curtos) → sem WhatsApp
-- O CSV pode trazer múltiplos números — o app pega o primeiro celular válido
 
-## Ações automáticas
+## Score combinado
 
-- Clicar em **Email** → abre `mailto:`, pergunta após 1.5s se quer marcar como contatado
-- Clicar em **WhatsApp** → abre `wa.me`, marca como contatado direto após 0.6s (sem pergunta — clique no WA é decisão clara de contato)
-- Clicar em **Copiar** → copia para clipboard
-- Clicar em **Contatado** / **Pular** → marca direto
+`max(scoreEmail, scoreWa)` onde `scoreWa = 75` (PRATA) se tem WhatsApp. O melhor canal define a categoria do contato. Filtro do lote mostra contatos com pelo menos um canal Ouro/Prata/Bronze.
+
+## Mailto e Gmail
+
+Para alunos que usam Gmail web, o `mailto:` precisa ser configurado uma vez:
+
+1. Abrir mail.google.com no Chrome
+2. Permitir que o site abra os links de email (ícone de protocolo na barra de endereço)
+3. A partir daí, todo clique em "📧 Email" abre numa aba nova do Gmail com tudo preenchido
+
+Sem essa configuração, o `mailto:` abre o Outlook desktop ou o app Mail nativo do sistema.
 
 ## Deploy
 
-GitHub Pages: jogue `index.html` + `app.js` num repositório público e ative Pages nas configurações.
+GitHub Pages: jogue `index.html` + `app.js` num repositório público e ative Pages.
 
 ## Persistência
 
-- Chave `prospect_cia_v3` no localStorage (~5MB, cabe ~50.000 contatos)
-- Migração automática do `prospect_cia_v2` no primeiro carregamento da v3
-- Export Excel com 5 abas: Base completa, Bons pendentes, Já contatados, **WhatsApp pendentes** (nova), Resumo
+- Chave `prospect_cia_v3` no localStorage (~5MB, ~50.000 contatos)
+- Migração automática de bases v2 no primeiro carregamento
+- Migração automática de templates v3 antigos (formato plano subject/body) → novo formato por perfil
+- Export Excel com 5 abas: Base completa, Bons pendentes, Já contatados, WhatsApp pendentes, Resumo

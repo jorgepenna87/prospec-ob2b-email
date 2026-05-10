@@ -19,17 +19,70 @@ const STORAGE_KEY = 'prospect_cia_v3';
 const STATE_VERSION = 3;
 
 // ---------- TEMPLATES PADRÃO ----------
+// Emails SPIN longos por perfil: Situação → Problema → Implicação → Necessidade
 const DEFAULT_TEMPLATE_EMAIL = {
-  subject: 'Apresentação — Cálculos trabalhistas para {{razao}}',
-  body: `Prezados,
+  advocacia: {
+    subject: 'A liquidação como diferencial competitivo da {{razao}}',
+    body: `Prezados da {{razao}},
 
-Sou {{eu_titulo}} e atendo escritórios e sindicatos em todo o Brasil com cálculos de liquidação de sentença, impugnações, embargos e laudos periciais. Identifiquei a {{razao}} ({{cidade}}/{{uf}}) e gostaria de me apresentar como possível parceiro técnico.
+Sou {{eu_nome}}, {{eu_titulo}}. Estou prospectando escritórios trabalhistas em {{cidade}}/{{uf}} para uma conversa específica sobre fase de execução, e gostaria de apresentar meu trabalho.
 
-Preparo cálculos em PJeCalc, planilhas auditáveis e pareceres técnicos no padrão TRT, com retorno rápido e custo competitivo. Posso enviar amostras de trabalhos anteriores caso haja interesse.
+A maior parte dos escritórios trabalhistas concentra esforço técnico na fase de conhecimento, na construção da inicial, na produção da prova e na sustentação oral. Faz sentido, é o momento em que se constrói o direito. O problema é que, transitada em julgado a sentença favorável, a fase de liquidação chega como se fosse mero trâmite operacional, e o cálculo da parte contrária é aceito sem análise técnica fundamentada.
+
+E é exatamente nessa fase que se perde parcela significativa do que foi conquistado. Erro de base de cálculo, atualização monetária aplicada com índice equivocado, FGTS sem reflexos corretos, juros calculados de forma simples quando deveriam ser compostos, integração de habituais ignorada, períodos prescritos não excluídos. Não são erros que aparecem nos manuais, são erros que só quem trabalha com cálculo todo dia identifica. E a consequência prática é dupla: o cliente recebe menos do que tinha direito, e o escritório recebe honorários proporcionalmente menores sobre um valor reduzido.
+
+Há outra vertente do mesmo problema. Quando a parte adversa apresenta cálculo da liquidação, sem impugnação técnica fundamentada o juiz homologa, e a partir daí a discussão fica restrita a embargos, agravo e ação rescisória, instâncias em que o ônus argumentativo é muito maior. A janela para corrigir o cálculo é exatamente a impugnação à sentença de liquidação, e ela exige domínio técnico específico.
+
+O que ofereço à {{razao}} é precisamente esse braço técnico. Trabalho com cálculos em PJeCalc, pareceres no padrão TRT, impugnações fundamentadas a cálculos da parte contrária, análise crítica de laudos periciais de liquidação e suporte técnico em embargos e agravos. Atendo de forma pontual (por intervenção) ou em parceria recorrente, dependendo do volume e do perfil do escritório.
+
+Caso faça sentido, posso enviar amostras de trabalhos anteriores e marcamos uma conversa rápida para entender o fluxo da {{razao}} na fase de execução.
 
 Atenciosamente,
 {{eu_nome}}
 {{eu_titulo}}`
+  },
+
+  contabilidade: {
+    subject: 'Cálculo trabalhista como serviço da {{razao}} — proposta de parceria',
+    body: `Prezados da {{razao}},
+
+Sou {{eu_nome}}, {{eu_titulo}}. Estou prospectando escritórios contábeis em {{cidade}}/{{uf}} com uma proposta de parceria específica que pode fazer sentido para a carteira de vocês.
+
+Escritório contábil é o profissional de maior confiança da empresa cliente. Folha, obrigações fiscais, declarações, retenções, eSocial, tudo passa pelas mãos de vocês. A empresa liga primeiro para a contabilidade quando aparece qualquer questão administrativa ou fiscal. E é exatamente isso que cria a oportunidade que estou trazendo.
+
+Quando uma empresa cliente da {{razao}} é citada em uma reclamação trabalhista, ela inevitavelmente vai precisar de cálculos. Cálculo de provisão para o balanço, cálculo de proposta de acordo, cálculo de impugnação ao valor pretendido pelo reclamante, cálculo de liquidação se for vencida, cálculo para acordo na execução. Esses cálculos não são folha de pagamento comum, são técnica jurídica aplicada a cálculo, com regras de prescrição, integração de habituais, base do FGTS específica, atualização monetária por índice próprio da Justiça do Trabalho. A maioria das contabilidades não calcula isso porque foge do escopo, e a empresa fica órfã num momento crítico.
+
+O que acontece na prática é que a empresa busca o calculista por conta própria, normalmente por indicação do advogado da outra ponta, e a contabilidade perde a oportunidade de manter o cliente dentro de casa naquele momento de maior necessidade. Pior, em muitos casos a empresa contesta valores no processo com base em cálculo mal feito e termina pagando mais por causa de uma defesa técnica frágil.
+
+A proposta é simples. Vocês indicam a {{razao}} como ponte técnica para esses cálculos quando aparece a demanda, e mantemos uma estrutura de parceria, com divisão do honorário ou repasse percentual, conforme o que fizer sentido para vocês. Sem custo de estrutura, sem necessidade de contratação, e o cliente não sai do guarda-chuva da contabilidade.
+
+Posso enviar uma proposta detalhada de parceria e amostras de trabalho. Vale uma conversa rápida?
+
+Atenciosamente,
+{{eu_nome}}
+{{eu_titulo}}`
+  },
+
+  sindicato: {
+    subject: 'Cumprimento de sentença coletiva: a fase em que o sindicato perde no detalhe',
+    body: `Prezados da {{razao}},
+
+Sou {{eu_nome}}, {{eu_titulo}}. Estou prospectando entidades sindicais em {{cidade}}/{{uf}} para uma conversa muito específica sobre uma fase processual em que, na minha experiência, os sindicatos perdem parcela importante do que conquistaram. Espero que faça sentido para a {{razao}}.
+
+A ação coletiva é a grande ferramenta do sindicato. Substituição processual de centenas, às vezes milhares de trabalhadores, tese única, sentença que reconhece o direito e abre o caminho para que cada substituído receba. É no mérito que o sindicato investe, e é no mérito que vence. Mas o que acontece depois disso é, na minha leitura, o calcanhar de Aquiles do trabalho sindical contemporâneo.
+
+O sindicato ganha a tese, transita em julgado, e a partir daí cada substituído precisa promover o cumprimento de sentença individualmente, com cálculo próprio e impugnação aos cálculos apresentados pela ré. Esse é um trabalho técnico massivo. São centenas de cálculos, cada um com particularidades próprias do trabalhador (período em que esteve na empresa, função, salário base, jornada efetiva, prescrição quinquenal específica), e do outro lado a ré apresenta cálculo padronizado tentando aplicar a sentença pelo menor valor possível. Sem impugnação técnica fundamentada, o juiz homologa o cálculo da ré, e o trabalhador substituído recebe uma fração do que tinha direito.
+
+A implicação prática é que a {{razao}} ganha no mérito, recebe o reconhecimento jurídico, mas a categoria não recebe o valor proporcional à vitória. E pior, o trabalhador substituído frequentemente não tem como contratar um advogado particular para a fase de cumprimento, porque o valor individual não comporta o honorário, e acaba assinando o que aparece. O resultado é o paradoxo de uma ação coletiva ganha que se converte, na ponta, em pagamento minimalista.
+
+O que proponho à {{razao}} é precisamente um suporte técnico estruturado para essa fase. Cálculos individualizados de cumprimento de sentença para os substituídos, impugnações fundamentadas aos cálculos apresentados pela ré, análise crítica de laudos periciais de liquidação coletiva, e suporte técnico em embargos à execução e agravos de petição. Trabalho com cálculos em PJeCalc e produzo pareceres no padrão TRT.
+
+Posso atender por intervenção, por lote (por exemplo, todos os substituídos de uma mesma ação) ou em parceria recorrente. Caso faça sentido, envio amostras e propostas e marcamos uma conversa.
+
+Atenciosamente,
+{{eu_nome}}
+{{eu_titulo}}`
+  }
 };
 
 // Templates SPIN — 3 perfis × 3 variações (rotação por contato)
@@ -39,29 +92,31 @@ const DEFAULT_TEMPLATE_WA = {
 
 Meu nome é {{eu_nome}}, sou {{eu_titulo}}.
 
-Entrei em contato com a {{razao}} porque tenho uma pergunta direta: quando chega o cálculo da parte contrária em uma execução, o escritório tem alguém que faz a análise técnica antes de aceitar o valor?
+Uma pergunta direta pra {{razao}}: quando chega o cálculo da parte contrária na fase de execução, quem faz a análise técnica antes de aceitar o valor?
 
-Pergunto porque erros em correção monetária, base de FGTS e horas extras são muito mais comuns do que parecem. E advogados que não impugnam com fundamento técnico acabam deixando dinheiro na mesa, seja do cliente ou dos próprios honorários.
+Pergunto porque erro de base, atualização equivocada, FGTS sem reflexos corretos e juros mal aplicados são muito mais comuns do que parecem. E sem impugnação fundamentada, o juiz homologa o cálculo da ré e o crédito do cliente cai. O escritório recebe honorário sobre um valor reduzido, e a vitória no mérito vira pagamento parcial.
 
-Se fizer sentido conversar, fico à disposição.`,
+Trabalho exatamente nessa fase. Se fizer sentido, fico à disposição pra uma conversa rápida.`,
 
 `Olá!
 
 Meu nome é {{eu_nome}}, sou {{eu_titulo}}.
 
-Uma coisa que vejo com frequência: o processo foi bem conduzido, a sentença foi favorável, mas na hora do cumprimento o cálculo apresentado pela outra parte está cheio de problemas. E sem uma impugnação bem fundamentada, o que foi conquistado vai embora.
+Vejo com frequência um padrão entre escritórios trabalhistas: o processo é bem conduzido, a sentença sai favorável, mas quando o cálculo de liquidação chega da outra parte ele é aceito sem impugnação técnica.
 
-A {{razao}} já passou por uma situação assim? Posso mostrar como trabalho nessa fase.`,
+E aí está o ponto cego. A janela pra corrigir o cálculo é a impugnação à sentença de liquidação. Depois dela, a discussão fica restrita a embargos e agravo, com ônus argumentativo muito maior. O cliente recebe menos, o honorário sobre o êxito reduz, e o escritório nem sempre identifica que isso aconteceu.
+
+A {{razao}} já passou por essa situação? Posso mostrar como trabalho nessa fase.`,
 
 `Olá! Tudo certo?
 
 Meu nome é {{eu_nome}}, sou {{eu_titulo}}.
 
-Queria fazer uma pergunta para a {{razao}}: quando o cliente chega na fase de execução, quem cuida da parte técnica dos cálculos no escritório?
+Pergunta pra {{razao}}: quando o cliente chega na fase de execução, quem cuida da parte técnica dos cálculos no escritório?
 
-Esse costuma ser um ponto crítico. A diferença entre aceitar o cálculo ou impugnar com técnica pode representar valores significativos para o cliente, e consequentemente para o escritório.
+Esse costuma ser o ponto onde o resultado real do processo se decide. A diferença entre aceitar o cálculo da ré ou impugná-lo com fundamento técnico costuma representar parcela importante do crédito do cliente, e consequentemente do honorário do escritório.
 
-Se quiser trocar uma ideia sobre como isso funciona na prática, estou à disposição.`
+Trabalho com cálculos em PJeCalc, impugnações fundamentadas e pareceres no padrão TRT. Se quiser trocar uma ideia sobre como isso funciona na prática, estou à disposição.`
   ],
 
   contabilidade: [
@@ -69,31 +124,29 @@ Se quiser trocar uma ideia sobre como isso funciona na prática, estou à dispos
 
 Meu nome é {{eu_nome}}, sou {{eu_titulo}}.
 
-Tenho uma proposta de parceria que pode fazer sentido para a {{razao}}. Vocês já atendem empresas, já têm a confiança delas para folha e obrigações fiscais. Quando uma dessas empresas enfrenta uma ação trabalhista e chega na fase de cálculo, ela precisa de alguém de confiança.
+Tenho uma proposta de parceria que pode fazer sentido pra {{razao}}. Quando uma das empresas atendidas por vocês é citada numa reclamação trabalhista, ela vai precisar de cálculo de provisão, cálculo pra acordo, cálculo de impugnação ao valor pretendido, cálculo de liquidação. Esse cálculo não é folha comum, é técnica jurídica aplicada, com regras de prescrição, integração de habituais, base do FGTS específica e atualização própria da Justiça do Trabalho.
 
-A ideia é simples: eu ofereço o serviço de cálculo e liquidação, vocês indicam para a carteira, e dividimos o resultado. Sem custo para vocês, sem necessidade de estrutura adicional.
+A maioria das contabilidades não calcula isso, e a empresa vai buscar fora, geralmente por indicação do advogado da outra parte. A contabilidade perde a posição de fornecedor único da empresa no momento de maior necessidade.
 
-Teriam interesse em conversar sobre isso?`,
+A proposta é simples: vocês indicam, eu calculo, e o cliente fica dentro do guarda-chuva da {{razao}}. Vale uma conversa?`,
 
 `Olá!
 
 Meu nome é {{eu_nome}}, sou {{eu_titulo}}.
 
-Uma pergunta rápida para a {{razao}}: quando um dos clientes empresa de vocês enfrenta uma ação trabalhista, para onde vai a parte dos cálculos?
+Pergunta rápida pra {{razao}}: quando uma empresa cliente de vocês enfrenta uma ação trabalhista, pra onde vai a parte dos cálculos?
 
-Pergunto porque muitos escritórios contábeis que conheço já têm toda a confiança do cliente, mas ainda indicam para fora quando aparece esse tipo de demanda. Isso representa uma receita que poderia ficar dentro da estrutura de vocês.
+Pergunto porque a contabilidade já tem a confiança do cliente pra folha e obrigações fiscais, mas o cálculo trabalhista de processo costuma ficar fora do escopo. O que acontece é que o cliente vai buscar fora num momento delicado, e às vezes contesta o valor pretendido com base em cálculo mal feito, terminando por pagar mais por causa de uma defesa técnica frágil.
 
-Posso explicar como funciona essa parceria de forma bem direta. Vale uma conversa?`,
+Trabalho exatamente com isso, e a parceria pode fazer com que esses cálculos passem a ser oferecidos pela {{razao}} sem custo de estrutura. Vale uma conversa direta?`,
 
 `Olá! Tudo certo?
 
 Meu nome é {{eu_nome}}, sou {{eu_titulo}}.
 
-Vocês sabiam que boa parte dos escritórios contábeis que adicionaram cálculo trabalhista como serviço de parceria conseguiram aumentar o ticket médio por cliente sem contratar ninguém novo?
+Boa parte dos escritórios contábeis que adicionaram cálculo trabalhista como serviço de parceria aumentou o ticket médio por cliente sem precisar contratar ninguém novo. A lógica é direta: a {{razao}} já tem a empresa como cliente, quando ela é citada numa ação trabalhista o serviço pode ser entregue com o nome de vocês por trás e o meu trabalho técnico por baixo.
 
-A lógica é direta: a {{razao}} já tem a empresa como cliente. Quando ela tem uma ação trabalhista e precisa de cálculo de liquidação, rescisória ou impugnação, esse serviço pode ser entregue com o nome de vocês por trás, com o meu trabalho técnico por baixo.
-
-Posso mostrar como funciona?`
+O ponto que costuma fechar a conversa é entender o volume de empresas-cliente da {{razao}} e o histórico de demandas trabalhistas dessa carteira. Posso explicar como estrutura de parceria funciona em 10 minutos. Vale uma conversa?`
   ],
 
   sindicato: [
@@ -101,27 +154,31 @@ Posso mostrar como funciona?`
 
 Meu nome é {{eu_nome}}, sou {{eu_titulo}}.
 
-Uma pergunta para a {{razao}}: quando o sindicato entra com ação coletiva, os cálculos são elaborados levando em conta como vai funcionar a liquidação lá na frente?
+Pergunta pra {{razao}}: depois que a ação coletiva transita em julgado, como o sindicato organiza o cumprimento de sentença individual de cada substituído?
 
-Pergunto porque é muito comum o sindicato ganhar no mérito mas perder na execução. O cálculo apresentado pela parte contrária chega com problemas, e sem alguém para fazer a impugnação técnica, o trabalhador recebe menos do que conquistou.
+Pergunto porque esse costuma ser o calcanhar de Aquiles do trabalho sindical. A {{razao}} ganha a tese, mas cada substituído precisa promover o cumprimento individual com cálculo próprio e impugnação aos valores apresentados pela ré. São centenas de cálculos, cada um com particularidades do trabalhador, e do outro lado a ré apresenta cálculo padronizado tentando aplicar a sentença pelo menor valor possível.
 
-Já passaram por isso? Posso mostrar como trabalho nessa fase.`,
+Sem impugnação técnica fundamentada, o juiz homologa, e o trabalhador substituído recebe uma fração do que tinha direito. Trabalho com esse suporte estruturado. Posso mostrar como?`,
 
 `Olá!
 
 Meu nome é {{eu_nome}}, sou {{eu_titulo}}.
 
-O cumprimento de sentença coletiva é uma das fases mais delicadas. A sentença pode ser excelente, mas se o cálculo de liquidação não for acompanhado de perto, o que foi conquistado na negociação não chega inteiro para o trabalhador.
+O cumprimento de sentença coletiva é uma das fases mais delicadas pro sindicato. A sentença pode ser excelente, mas se o cálculo de liquidação de cada substituído não for acompanhado tecnicamente, o que foi conquistado coletivamente não chega inteiro pra categoria.
 
-A {{razao}} tem estrutura para fazer esse acompanhamento técnico hoje? Posso mostrar como funciona um suporte especializado nessa fase.`,
+A implicação prática é dura: o trabalhador substituído frequentemente não tem como contratar advogado particular pra fase de cumprimento (o valor individual não comporta o honorário) e acaba assinando o cálculo da ré. A {{razao}} ganha no mérito, mas a categoria recebe na ponta uma fração da vitória.
+
+A {{razao}} tem estrutura técnica pra acompanhar essa fase hoje? Posso mostrar como funciona um suporte especializado.`,
 
 `Olá! Tudo certo?
 
 Meu nome é {{eu_nome}}, sou {{eu_titulo}}.
 
-Uma coisa que vejo com frequência em ações coletivas: a inicial não foi pensada nos cálculos. Aí o sindicato ganha, mas na hora da liquidação a conta não fecha e o trabalhador fica prejudicado.
+Em ações coletivas eu vejo um padrão: a inicial é construída com foco no mérito, sem que os cálculos da fase de liquidação sejam pensados desde o ajuizamento. Aí o sindicato ganha, e na hora do cumprimento individual a conta não fecha pra cada substituído.
 
-Trabalho preventivamente com os cálculos desde a fase inicial, e acompanho até o cumprimento de sentença. Seria interessante conversar com a {{razao}} sobre como isso poderia funcionar para vocês?`
+Trabalho preventivamente. Olho a inicial pensando como vai ficar a liquidação lá na frente, faço cálculos individualizados de cumprimento, impugno os cálculos da ré e dou suporte técnico em embargos à execução. Atendo por intervenção, por lote ou em parceria recorrente.
+
+Seria interessante conversar com a {{razao}} sobre como isso poderia funcionar pra vocês?`
   ]
 };
 
@@ -133,7 +190,7 @@ let db = {
     nome: '',
     titulo: 'Estrategista em Liquidação Trabalhista'
   },
-  template: { ...DEFAULT_TEMPLATE_EMAIL },
+  template: JSON.parse(JSON.stringify(DEFAULT_TEMPLATE_EMAIL)),
   templateWa: JSON.parse(JSON.stringify(DEFAULT_TEMPLATE_WA))
 };
 
@@ -225,11 +282,28 @@ function loadDB() {
     }
     const parsed = JSON.parse(raw);
     if (parsed && parsed.version === STATE_VERSION) {
+      // Detectar template no formato antigo (subject/body planos) e migrar
+      let template = parsed.template;
+      if (template && typeof template.subject === 'string' && typeof template.body === 'string') {
+        // Formato antigo — migrar pra estrutura por perfil aplicando o conteúdo antigo só em advocacia
+        const novo = JSON.parse(JSON.stringify(DEFAULT_TEMPLATE_EMAIL));
+        novo.advocacia = { subject: template.subject, body: template.body };
+        template = novo;
+      } else if (!template || !template.advocacia) {
+        template = JSON.parse(JSON.stringify(DEFAULT_TEMPLATE_EMAIL));
+      } else {
+        // Garante que os 3 perfis existem (caso seja parcial)
+        for (const p of ['advocacia', 'contabilidade', 'sindicato']) {
+          if (!template[p] || !template[p].subject || !template[p].body) {
+            template[p] = { ...DEFAULT_TEMPLATE_EMAIL[p] };
+          }
+        }
+      }
       db = {
         version: STATE_VERSION,
         contatos: parsed.contatos || [],
         identidade: parsed.identidade || { nome: '', titulo: 'Estrategista em Liquidação Trabalhista' },
-        template: parsed.template || { ...DEFAULT_TEMPLATE_EMAIL },
+        template: template,
         templateWa: parsed.templateWa || JSON.parse(JSON.stringify(DEFAULT_TEMPLATE_WA))
       };
     }
@@ -268,12 +342,8 @@ function migrarDeV2() {
         waVar: Math.floor(Math.random() * 3)
       };
     });
-    if (v2db.template) {
-      db.template = {
-        subject: v2db.template.subject || DEFAULT_TEMPLATE_EMAIL.subject,
-        body: v2db.template.body || DEFAULT_TEMPLATE_EMAIL.body
-      };
-    }
+    // Não migra template antigo da v2 — era um único genérico, agora temos 3 SPIN longos por perfil
+    // (a estrutura nova é mantida com os defaults DEFAULT_TEMPLATE_EMAIL)
     saveDB();
     console.log(`Migrados ${db.contatos.length} contatos da v2 → v3`);
   } catch (e) {
@@ -518,6 +588,11 @@ function gerarMsgWa(c) {
   return aplicarTemplate(variacoes[idx], c);
 }
 
+// Retorna { subject, body } do template de email para o perfil do contato
+function getEmailTemplate(perfil) {
+  return db.template[perfil] || db.template.advocacia;
+}
+
 // ---------- MODO PROSPECÇÃO ----------
 let lotAtual = [];
 
@@ -558,8 +633,9 @@ function renderLote() {
 
     const cat = categoriaPorScore(c.scoreCombinado);
     const catLower = cat.toLowerCase();
-    const msgEmail = aplicarTemplate(db.template.body, c);
-    const subjEmail = aplicarTemplate(db.template.subject, c);
+    const tpl = getEmailTemplate(c.perfil);
+    const msgEmail = aplicarTemplate(tpl.body, c);
+    const subjEmail = aplicarTemplate(tpl.subject, c);
     const mailto = `mailto:${encodeURIComponent(c.email)}?subject=${encodeURIComponent(subjEmail)}&body=${encodeURIComponent(msgEmail)}`;
 
     let waLink = '';
@@ -666,8 +742,9 @@ $('#contact-list').addEventListener('click', e => {
     }, 600);
   } else if (action === 'copiar-email') {
     e.preventDefault();
-    const subj = aplicarTemplate(db.template.subject, c);
-    const body = aplicarTemplate(db.template.body, c);
+    const tpl = getEmailTemplate(c.perfil);
+    const subj = aplicarTemplate(tpl.subject, c);
+    const body = aplicarTemplate(tpl.body, c);
     const texto = `Para: ${c.email}\nAssunto: ${subj}\n\n${body}`;
     navigator.clipboard.writeText(texto).then(() => {
       target.textContent = '✓ Copiado!';
@@ -711,7 +788,7 @@ function exportarExcel() {
     'Score combinado': c.scoreCombinado,
     'Status': c.status === 'contatado' ? 'Contatado' : c.status === 'pulado' ? 'Pulado' : 'Pendente',
     'Data do contato': c.dataContato ? new Date(c.dataContato).toLocaleString('pt-BR') : '',
-    'Mensagem email': aplicarTemplate(db.template.body, c),
+    'Mensagem email': aplicarTemplate(getEmailTemplate(c.perfil).body, c),
     'Mensagem WhatsApp': c.temWhats ? gerarMsgWa(c) : ''
   }));
 
@@ -807,9 +884,7 @@ $('#btn-prospectar').addEventListener('click', () => {
   montarLote();
 });
 $('#btn-mensagem').addEventListener('click', () => {
-  $('#subject').value = db.template.subject;
-  $('#msg-template').value = db.template.body;
-  goToPanel('message');
+  abrirEditorEmail('advocacia');
 });
 $('#btn-identidade').addEventListener('click', abrirIdentidade);
 $('#btn-export').addEventListener('click', exportarExcel);
@@ -872,13 +947,50 @@ $('#btn-back-from-import').addEventListener('click', () => {
   goToPanel('dashboard');
 });
 
-// Message
+// Message — editor de email por perfil
+let perfilEditandoEmail = 'advocacia';
+
+function abrirEditorEmail(perfil) {
+  perfilEditandoEmail = perfil || 'advocacia';
+  // Atualiza estado visual das abas
+  $$('.email-perfil-tab').forEach(t => {
+    t.classList.toggle('active', t.dataset.perfil === perfilEditandoEmail);
+  });
+  // Carrega o conteúdo do perfil ativo
+  const tpl = db.template[perfilEditandoEmail];
+  $('#subject').value = tpl.subject;
+  $('#msg-template').value = tpl.body;
+  goToPanel('message');
+}
+
+// Tabs do editor
+$$('.email-perfil-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    // Antes de trocar, salva o que está editando no perfil atual (sem persistir ainda)
+    db.template[perfilEditandoEmail] = {
+      subject: $('#subject').value.trim(),
+      body: $('#msg-template').value.trim()
+    };
+    abrirEditorEmail(tab.dataset.perfil);
+  });
+});
+
 $('#btn-save-msg').addEventListener('click', () => {
-  db.template.subject = $('#subject').value.trim();
-  db.template.body = $('#msg-template').value.trim();
+  db.template[perfilEditandoEmail] = {
+    subject: $('#subject').value.trim(),
+    body: $('#msg-template').value.trim()
+  };
   saveDB();
   goToPanel('dashboard');
 });
+
+$('#btn-restore-msg').addEventListener('click', () => {
+  if (!confirm(`Restaurar o template padrão SPIN do perfil "${perfilEditandoEmail}"? Suas edições neste perfil serão perdidas.`)) return;
+  db.template[perfilEditandoEmail] = { ...DEFAULT_TEMPLATE_EMAIL[perfilEditandoEmail] };
+  $('#subject').value = db.template[perfilEditandoEmail].subject;
+  $('#msg-template').value = db.template[perfilEditandoEmail].body;
+});
+
 $('#btn-back-from-msg').addEventListener('click', () => goToPanel('dashboard'));
 
 // Identidade
