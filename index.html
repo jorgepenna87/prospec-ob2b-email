@@ -1,0 +1,1001 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Prospect &amp; Cia. — Pós em Estratégias de Cálculo Trabalhista</title>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+<style>
+  :root {
+    --bg: #070B0B;
+    --surface: #0E1616;
+    --surface2: #142020;
+    --surface3: #1B2929;
+    --border: #1E3030;
+    --border-strong: #2A3F3F;
+    --cyan: #2DFFD4;
+    --cyan-dim: #14998A;
+    --cyan-soft: #0a665b;
+    --text: #E6F7F2;
+    --text-strong: #FFFFFF;
+    --muted: #7A9994;
+    --muted-soft: #5C7A75;
+    --warning: #FFB84D;
+    --danger: #FF6B6B;
+    --gold: #E5C46A;
+    --silver: #B8C7C4;
+    --bronze: #C8915C;
+    --dead: #4A5C5A;
+    --wa-green: #25D366;
+    --wa-green-dim: #128C7E;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Inter", sans-serif;
+    font-size: 15px;
+    line-height: 1.5;
+    min-height: 100vh;
+  }
+  button { font-family: inherit; cursor: pointer; }
+  a { color: inherit; text-decoration: none; }
+
+  .app {
+    max-width: 920px;
+    margin: 0 auto;
+    padding: 0 16px 80px;
+  }
+
+  /* ====== HEADER ====== */
+  .header {
+    padding: 28px 0 18px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 24px;
+  }
+  .brand-mark {
+    font-size: 11px;
+    color: var(--cyan-dim);
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+    text-transform: uppercase;
+    letter-spacing: 1.4px;
+    margin-bottom: 8px;
+  }
+  .header h1 {
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: 0.2px;
+    color: var(--text-strong);
+    margin-bottom: 6px;
+  }
+  .header .sub {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+  .header .meta-line {
+    margin-top: 12px;
+    font-size: 11px;
+    color: var(--muted-soft);
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .meta-line .edition { color: var(--cyan-dim); }
+
+  /* ====== PANEL ====== */
+  section.panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 20px;
+  }
+  section.panel.hidden { display: none; }
+  section.panel h2 {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text-strong);
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  section.panel h2 .marker {
+    width: 8px; height: 8px;
+    background: var(--cyan);
+    border-radius: 2px;
+    flex-shrink: 0;
+  }
+  section.panel .helper {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.55;
+    margin-bottom: 22px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  /* ====== AVISO IDENTIDADE ====== */
+  .aviso-id {
+    background: rgba(255, 184, 77, 0.08);
+    border: 1px solid rgba(255, 184, 77, 0.35);
+    border-radius: 8px;
+    padding: 12px 14px;
+    font-size: 13px;
+    color: var(--text);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .aviso-id.hidden { display: none; }
+  .aviso-id strong { color: var(--warning); }
+  .aviso-id .aviso-cta {
+    margin-left: auto;
+    background: var(--warning);
+    color: var(--bg);
+    border: none;
+    padding: 7px 14px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+  }
+
+  /* ====== DASHBOARD STATS ====== */
+  .dashboard {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+  .stat {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px 16px;
+  }
+  .stat .label {
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    color: var(--muted-soft);
+    margin-bottom: 6px;
+  }
+  .stat .value {
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--text-strong);
+    line-height: 1;
+    letter-spacing: -0.5px;
+  }
+  .stat.highlight {
+    background: linear-gradient(180deg, var(--surface3) 0%, var(--surface2) 100%);
+    border-color: var(--cyan-soft);
+  }
+  .stat.highlight .value { color: var(--cyan); }
+  .stat.highlight .label { color: var(--cyan-dim); }
+  .stat.wa {
+    background: linear-gradient(180deg, rgba(37,211,102,0.08) 0%, var(--surface2) 100%);
+    border-color: rgba(37, 211, 102, 0.3);
+  }
+  .stat.wa .value { color: var(--wa-green); }
+  .stat.wa .label { color: var(--wa-green-dim); }
+
+  /* ====== QUALITY BAR ====== */
+  .quality-bar {
+    height: 6px;
+    display: flex;
+    border-radius: 3px;
+    overflow: hidden;
+    background: var(--surface2);
+    margin-bottom: 10px;
+  }
+  .quality-bar > div {
+    transition: width 0.4s;
+    min-width: 0;
+  }
+  .quality-legend {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--muted);
+    margin-bottom: 24px;
+  }
+  .quality-legend span {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .quality-legend i {
+    width: 10px; height: 10px;
+    border-radius: 2px;
+    display: inline-block;
+  }
+
+  /* ====== ACTIONS ====== */
+  .main-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 11px 18px;
+    border-radius: 8px;
+    border: 1px solid var(--border-strong);
+    background: var(--surface2);
+    color: var(--text);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+    font-family: inherit;
+    line-height: 1.2;
+  }
+  .btn:hover:not(:disabled) {
+    border-color: var(--cyan-dim);
+    color: var(--text-strong);
+  }
+  .btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+  .btn.primary {
+    background: var(--cyan);
+    color: var(--bg);
+    border-color: var(--cyan);
+  }
+  .btn.primary:hover:not(:disabled) {
+    background: var(--cyan-dim);
+    border-color: var(--cyan-dim);
+    color: var(--bg);
+  }
+  .btn.secondary {
+    background: transparent;
+    border-color: var(--border);
+  }
+  .btn.danger {
+    background: transparent;
+    color: var(--danger);
+    border-color: rgba(255,107,107,0.35);
+  }
+  .btn.danger:hover:not(:disabled) {
+    background: rgba(255,107,107,0.08);
+    border-color: var(--danger);
+    color: var(--danger);
+  }
+  .btn.big { padding: 14px 22px; font-size: 14px; }
+
+  /* ====== EMPTY STATE ====== */
+  .empty-state {
+    text-align: center;
+    padding: 36px 24px;
+    background: var(--surface2);
+    border: 1px dashed var(--border-strong);
+    border-radius: 8px;
+    margin-top: 20px;
+  }
+  .empty-state.hidden { display: none; }
+  .empty-state h3 {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text-strong);
+    margin-bottom: 6px;
+  }
+  .empty-state p {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.55;
+  }
+
+  /* ====== INPUTS ====== */
+  textarea, input[type="text"] {
+    width: 100%;
+    background: var(--surface2);
+    border: 1px solid var(--border-strong);
+    border-radius: 8px;
+    padding: 12px 14px;
+    color: var(--text);
+    font-family: inherit;
+    font-size: 14px;
+    line-height: 1.55;
+    transition: border-color 0.15s;
+    outline: none;
+    resize: vertical;
+  }
+  textarea:focus, input:focus {
+    border-color: var(--cyan-dim);
+  }
+  textarea#msg-template { min-height: 220px; }
+
+  .field-label {
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    color: var(--cyan-dim);
+    margin-bottom: 8px;
+    margin-top: 16px;
+  }
+  .field-label:first-of-type { margin-top: 0; }
+  .field-hint {
+    font-size: 12px;
+    color: var(--muted-soft);
+    margin-top: 4px;
+    margin-bottom: 4px;
+  }
+
+  /* ====== TEACH BOX (variáveis) ====== */
+  .msg-vars {
+    background: var(--surface2);
+    border-left: 3px solid var(--cyan);
+    border-radius: 4px 8px 8px 4px;
+    padding: 12px 14px;
+    margin-bottom: 16px;
+    font-size: 12px;
+    color: var(--text);
+    line-height: 1.7;
+  }
+  .msg-vars .label-tag {
+    display: inline-block;
+    font-size: 10px;
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+    letter-spacing: 1px;
+    color: var(--cyan-dim);
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .msg-vars code {
+    display: inline-block;
+    padding: 2px 7px;
+    background: var(--bg);
+    color: var(--cyan);
+    border-radius: 4px;
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+    font-size: 11px;
+    margin-right: 4px;
+  }
+
+  /* ====== FILE DROP ====== */
+  .file-drop {
+    display: block;
+    border: 2px dashed var(--border-strong);
+    border-radius: 12px;
+    padding: 44px 30px;
+    text-align: center;
+    background: var(--surface2);
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-bottom: 16px;
+  }
+  .file-drop:hover {
+    border-color: var(--cyan-dim);
+    background: var(--surface3);
+  }
+  .file-drop.dragover {
+    border-color: var(--cyan);
+    background: var(--surface3);
+  }
+  .file-drop p {
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+  .file-drop p strong { color: var(--text-strong); }
+  .file-drop input { display: none; }
+  .file-drop .icon {
+    font-size: 32px;
+    color: var(--cyan-dim);
+    margin-bottom: 10px;
+  }
+
+  /* ====== IMPORT PREVIEW ====== */
+  .preview-import {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+  .pi-cell {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px;
+    text-align: center;
+  }
+  .pi-num {
+    font-size: 30px;
+    font-weight: 700;
+    line-height: 1;
+    margin-bottom: 6px;
+    letter-spacing: -0.5px;
+  }
+  .pi-num.add { color: var(--cyan); }
+  .pi-num.dup { color: var(--warning); }
+  .pi-num.bad { color: var(--muted-soft); }
+  .pi-num.wa { color: var(--wa-green); }
+  .pi-lbl {
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--muted);
+  }
+
+  #import-preview.hidden { display: none; }
+
+  /* ====== SLIDER ====== */
+  .slider-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin: 18px 0;
+    padding: 16px 18px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+  }
+  .slider-row label {
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    color: var(--muted);
+    flex-shrink: 0;
+  }
+  .slider-row input[type=range] {
+    flex: 1;
+    accent-color: var(--cyan);
+  }
+  .slider-row .count {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--cyan);
+    min-width: 50px;
+    text-align: center;
+    letter-spacing: -0.5px;
+  }
+
+  .aviso {
+    background: rgba(255, 184, 77, 0.06);
+    border: 1px solid rgba(255, 184, 77, 0.2);
+    border-radius: 8px;
+    padding: 12px 14px;
+    font-size: 12px;
+    color: var(--text);
+    line-height: 1.55;
+    margin-bottom: 18px;
+  }
+  .aviso strong { color: var(--warning); }
+
+  /* ====== DAILY HEAD ====== */
+  .daily-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin-bottom: 16px;
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--muted);
+  }
+  .daily-head .progress-info { color: var(--cyan); }
+  .daily-head .progress-info span { color: var(--cyan); font-weight: 700; }
+
+  /* ====== CONTACT CARDS ====== */
+  .contact-list {
+    display: grid;
+    gap: 12px;
+  }
+  .contact-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    transition: all 0.25s;
+  }
+  .contact-card.contatado {
+    opacity: 0.55;
+    border-color: var(--cyan-soft);
+  }
+  .contact-card.pulado { opacity: 0.4; }
+
+  .card-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface2);
+  }
+  .card-head-left { flex: 1; min-width: 0; }
+  .card-head .razao {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text-strong);
+    margin-bottom: 4px;
+    line-height: 1.35;
+  }
+  .card-head .meta {
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.3px;
+    margin-bottom: 8px;
+  }
+  .card-channels {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+
+  /* ====== BADGES ====== */
+  .badge-quality {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    flex-shrink: 0;
+    border: 1px solid;
+  }
+  .badge-quality.ouro {
+    color: var(--gold);
+    border-color: rgba(229, 196, 106, 0.4);
+    background: rgba(229, 196, 106, 0.08);
+  }
+  .badge-quality.prata {
+    color: var(--silver);
+    border-color: rgba(184, 199, 196, 0.4);
+    background: rgba(184, 199, 196, 0.08);
+  }
+  .badge-quality.bronze {
+    color: var(--bronze);
+    border-color: rgba(200, 145, 92, 0.4);
+    background: rgba(200, 145, 92, 0.08);
+  }
+  .badge-quality.ruim {
+    color: var(--muted);
+    border-color: var(--border-strong);
+    background: var(--surface2);
+  }
+  .badge-quality.morto {
+    color: var(--dead);
+    border-color: var(--border);
+    background: var(--surface);
+  }
+
+  /* Mini-badges de canal e perfil */
+  .ch-badge, .perfil-tag {
+    display: inline-block;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--muted);
+  }
+  .ch-badge.email-ouro { color: var(--gold); border-color: rgba(229,196,106,0.3); }
+  .ch-badge.email-prata { color: var(--silver); border-color: rgba(184,199,196,0.3); }
+  .ch-badge.email-bronze { color: var(--bronze); border-color: rgba(200,145,92,0.3); }
+  .ch-badge.email-ruim { color: var(--muted); }
+  .ch-badge.email-morto { color: var(--dead); }
+  .ch-badge.wa-on {
+    color: var(--wa-green);
+    border-color: rgba(37, 211, 102, 0.4);
+    background: rgba(37, 211, 102, 0.06);
+  }
+  .ch-badge.wa-off { color: var(--muted-soft); }
+
+  .perfil-tag.perfil-advocacia {
+    color: var(--cyan);
+    border-color: var(--cyan-soft);
+    background: rgba(45, 255, 212, 0.06);
+  }
+  .perfil-tag.perfil-contabilidade {
+    color: var(--warning);
+    border-color: rgba(255, 184, 77, 0.3);
+    background: rgba(255, 184, 77, 0.06);
+  }
+  .perfil-tag.perfil-sindicato {
+    color: #C8B5FF;
+    border-color: rgba(200, 181, 255, 0.3);
+    background: rgba(200, 181, 255, 0.06);
+  }
+
+  .status-tag {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-left: 8px;
+    vertical-align: middle;
+  }
+  .status-tag.ok {
+    color: var(--cyan);
+    background: rgba(45, 255, 212, 0.1);
+    border: 1px solid var(--cyan-soft);
+  }
+  .status-tag.skip {
+    color: var(--muted);
+    background: var(--surface2);
+    border: 1px solid var(--border);
+  }
+
+  .card-body { padding: 14px 16px; }
+
+  .contact-info {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+  }
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 10px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+    font-size: 11px;
+    color: var(--text);
+  }
+  .pill .ic { color: var(--cyan-dim); }
+
+  /* ====== MSG BLOCKS (collapsible) ====== */
+  .msg-block {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    margin-bottom: 8px;
+    overflow: hidden;
+  }
+  .msg-block summary {
+    padding: 10px 14px;
+    cursor: pointer;
+    font-size: 12px;
+    color: var(--text);
+    list-style: none;
+    user-select: none;
+    transition: background 0.15s;
+  }
+  .msg-block summary:hover { background: var(--surface2); }
+  .msg-block summary::-webkit-details-marker { display: none; }
+  .msg-block summary::before {
+    content: '▸';
+    color: var(--cyan-dim);
+    margin-right: 8px;
+    transition: transform 0.15s;
+    display: inline-block;
+  }
+  .msg-block[open] summary::before { transform: rotate(90deg); }
+  .msg-block .msg-label {
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--cyan-dim);
+    margin-right: 6px;
+  }
+  .msg-block.wa-msg .msg-label {
+    color: var(--wa-green-dim);
+  }
+  .msg-block .msg-preview {
+    padding: 12px 14px;
+    border-top: 1px solid var(--border);
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.65;
+    white-space: pre-wrap;
+    max-height: 220px;
+    overflow-y: auto;
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  }
+
+  .card-actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 12px;
+  }
+  .card-actions .btn {
+    padding: 9px 14px;
+    font-size: 12px;
+  }
+  .card-actions .btn.send {
+    background: var(--cyan);
+    color: var(--bg);
+    border-color: var(--cyan);
+  }
+  .card-actions .btn.send:hover {
+    background: var(--cyan-dim);
+    border-color: var(--cyan-dim);
+  }
+  .card-actions .btn.send-wa {
+    background: var(--wa-green);
+    color: var(--bg);
+    border-color: var(--wa-green);
+  }
+  .card-actions .btn.send-wa:hover {
+    background: var(--wa-green-dim);
+    border-color: var(--wa-green-dim);
+    color: #fff;
+  }
+  .card-actions .btn.copy {
+    background: transparent;
+  }
+  .card-actions .btn.mark {
+    background: transparent;
+    color: var(--cyan);
+    border-color: var(--cyan-soft);
+  }
+  .card-actions .btn.mark:hover {
+    background: rgba(45, 255, 212, 0.06);
+    border-color: var(--cyan-dim);
+  }
+  .card-actions .btn.skip {
+    background: transparent;
+    color: var(--muted);
+    border-color: var(--border);
+  }
+
+  /* ====== FOOTER ====== */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 20px 0;
+    margin-top: 32px;
+    text-align: center;
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    color: var(--muted-soft);
+  }
+  footer .orn { color: var(--cyan-dim); margin: 0 6px; }
+
+  /* ====== RESPONSIVE ====== */
+  @media (max-width: 760px) {
+    .header h1 { font-size: 19px; }
+    section.panel { padding: 18px 16px; }
+    .dashboard { grid-template-columns: repeat(2, 1fr); }
+    .preview-import { grid-template-columns: repeat(2, 1fr); }
+    .slider-row { flex-wrap: wrap; }
+    .slider-row label { width: 100%; }
+    .card-head { flex-direction: column; align-items: flex-start; }
+    .card-actions .btn { flex: 1 1 calc(50% - 4px); }
+    .aviso-id { flex-direction: column; align-items: flex-start; }
+    .aviso-id .aviso-cta { margin-left: 0; }
+  }
+</style>
+</head>
+<body>
+
+<div class="app">
+
+  <header class="header">
+    <div class="brand-mark">PÓS EM ESTRATÉGIAS DE CÁLCULO TRABALHISTA · SMART CALC</div>
+    <h1>Prospect &amp; Cia.</h1>
+    <p class="sub">Base de prospecção do calculista. Importe CSVs da Casa dos Dados, classifique automaticamente, e dispare emails ou WhatsApp personalizados sem queimar seu domínio.</p>
+    <div class="meta-line">
+      <span class="edition">v3.0 · Email + WhatsApp · 100% offline</span>
+      <span id="hoje"></span>
+    </div>
+  </header>
+
+  <section class="panel" id="panel-dashboard">
+    <h2><span class="marker"></span>Sua base de prospecção</h2>
+    <p class="helper">Importe quantos CSVs da Casa dos Dados quiser — vão se acumulando numa base única, sem duplicatas. O app detecta automaticamente o perfil de cada contato (advocacia, contabilidade ou sindicato) e separa os celulares com WhatsApp.</p>
+
+    <div class="aviso-id hidden" id="aviso-identidade">
+      <span><strong>Cadastre seu nome.</strong> Sem ele, as mensagens vão sair com placeholder "[Seu nome]".</span>
+      <button class="aviso-cta" onclick="document.getElementById('btn-identidade').click()">Cadastrar agora</button>
+    </div>
+
+    <div class="dashboard">
+      <div class="stat">
+        <div class="label">Total na base</div>
+        <div class="value" id="s-total">0</div>
+      </div>
+      <div class="stat highlight">
+        <div class="label">Bons (Ouro+Prata)</div>
+        <div class="value" id="s-bons">0</div>
+      </div>
+      <div class="stat wa">
+        <div class="label">Com WhatsApp</div>
+        <div class="value" id="s-wa">0</div>
+      </div>
+      <div class="stat">
+        <div class="label">Já contatados</div>
+        <div class="value" id="s-contatados">0</div>
+      </div>
+      <div class="stat">
+        <div class="label">A contatar</div>
+        <div class="value" id="s-pendentes">0</div>
+      </div>
+      <div class="stat">
+        <div class="label">Pulados</div>
+        <div class="value" id="s-pulados">0</div>
+      </div>
+    </div>
+
+    <div class="quality-bar" id="quality-bar">
+      <div class="qb-ouro" style="width: 0%; background: var(--gold);"></div>
+      <div class="qb-prata" style="width: 0%; background: var(--silver);"></div>
+      <div class="qb-bronze" style="width: 0%; background: var(--bronze);"></div>
+      <div class="qb-ruim" style="width: 0%; background: var(--muted-soft);"></div>
+      <div class="qb-morto" style="width: 0%; background: var(--dead);"></div>
+    </div>
+    <div class="quality-legend">
+      <span><i style="background: var(--gold)"></i><span id="leg-ouro">Ouro 0</span></span>
+      <span><i style="background: var(--silver)"></i><span id="leg-prata">Prata 0</span></span>
+      <span><i style="background: var(--bronze)"></i><span id="leg-bronze">Bronze 0</span></span>
+      <span><i style="background: var(--muted-soft)"></i><span id="leg-ruim">Ruim 0</span></span>
+      <span><i style="background: var(--dead)"></i><span id="leg-morto">Morto 0</span></span>
+    </div>
+
+    <div class="main-actions">
+      <button class="btn primary big" id="btn-prospectar">▶ Prospectar agora</button>
+      <button class="btn big" id="btn-add">+ Adicionar CSV</button>
+      <button class="btn secondary" id="btn-identidade">👤 Sua identidade</button>
+      <button class="btn secondary" id="btn-mensagem">✏ Editar email</button>
+      <button class="btn secondary" id="btn-export">↓ Exportar Excel</button>
+      <button class="btn danger" id="btn-clear">Limpar tudo</button>
+    </div>
+
+    <div id="empty-pitch" class="empty-state hidden">
+      <h3>Sua base está vazia</h3>
+      <p>Comece importando o primeiro CSV exportado da Casa dos Dados.</p>
+    </div>
+  </section>
+
+  <section class="panel hidden" id="panel-identidade">
+    <h2><span class="marker"></span>Sua identidade profissional</h2>
+    <p class="helper">Esses dados aparecem na assinatura dos emails e na apresentação das mensagens de WhatsApp. Salvos só no seu navegador.</p>
+
+    <div class="field-label">Seu nome</div>
+    <input type="text" id="id-nome" placeholder="Ex: João Silva">
+    <div class="field-hint">Aparece como assinatura no email e na apresentação do WhatsApp.</div>
+
+    <div class="field-label" style="margin-top: 18px;">Seu título profissional</div>
+    <input type="text" id="id-titulo" value="Estrategista em Liquidação Trabalhista" placeholder="Ex: Estrategista em Liquidação Trabalhista">
+    <div class="field-hint">Como você se apresenta. O padrão sugerido é "Estrategista em Liquidação Trabalhista".</div>
+
+    <div class="main-actions" style="margin-top: 24px;">
+      <button class="btn primary" id="btn-save-id">Salvar e voltar</button>
+      <button class="btn secondary" id="btn-back-from-id">Voltar sem salvar</button>
+    </div>
+  </section>
+
+  <section class="panel hidden" id="panel-import">
+    <h2><span class="marker"></span>Adicionar CSV à base</h2>
+    <p class="helper">Selecione um CSV exportado da Casa dos Dados. Detectamos automaticamente quais contatos já existem e descartamos os sem email.</p>
+
+    <label class="file-drop" id="file-drop">
+      <div class="icon">📁</div>
+      <p><strong>Clique aqui ou arraste o arquivo CSV</strong><br>Formato esperado: exportação da Casa dos Dados (separador ;)</p>
+      <input type="file" id="file-input" accept=".csv,text/csv">
+    </label>
+
+    <div id="import-preview" class="hidden">
+      <div class="preview-import">
+        <div class="pi-cell"><div class="pi-num add" id="pi-add">0</div><div class="pi-lbl">Novos a adicionar</div></div>
+        <div class="pi-cell"><div class="pi-num wa" id="pi-wa">0</div><div class="pi-lbl">Com WhatsApp</div></div>
+        <div class="pi-cell"><div class="pi-num dup" id="pi-dup">0</div><div class="pi-lbl">Duplicados (ignorados)</div></div>
+        <div class="pi-cell"><div class="pi-num bad" id="pi-bad">0</div><div class="pi-lbl">Sem email (descartados)</div></div>
+      </div>
+      <div class="main-actions">
+        <button class="btn primary big" id="btn-confirm-import">Confirmar e adicionar</button>
+        <button class="btn secondary" id="btn-cancel-import">Cancelar</button>
+      </div>
+    </div>
+
+    <div class="main-actions" style="margin-top: 18px;">
+      <button class="btn secondary" id="btn-back-from-import">← Voltar</button>
+    </div>
+  </section>
+
+  <section class="panel hidden" id="panel-message">
+    <h2><span class="marker"></span>Modelo de email</h2>
+    <p class="helper">Mesma mensagem de email, personalizada para cada contato. As mensagens de WhatsApp seguem 3 templates SPIN automáticos por perfil (advocacia, contabilidade, sindicato), não precisam ser editadas aqui.</p>
+
+    <div class="msg-vars">
+      <div class="label-tag">Variáveis disponíveis</div>
+      <code>{{razao}}</code> nome &nbsp;
+      <code>{{cidade}}</code> município &nbsp;
+      <code>{{uf}}</code> estado &nbsp;
+      <code>{{cnpj}}</code> CNPJ &nbsp;
+      <code>{{eu_nome}}</code> seu nome &nbsp;
+      <code>{{eu_titulo}}</code> seu título
+    </div>
+
+    <div class="field-label">Assunto do email</div>
+    <input type="text" id="subject" value="Apresentação — Cálculos trabalhistas para {{razao}}">
+
+    <div class="field-label">Corpo da mensagem</div>
+    <textarea id="msg-template">Prezados,
+
+Sou {{eu_titulo}} e atendo escritórios e sindicatos em todo o Brasil com cálculos de liquidação de sentença, impugnações, embargos e laudos periciais. Identifiquei a {{razao}} ({{cidade}}/{{uf}}) e gostaria de me apresentar como possível parceiro técnico.
+
+Preparo cálculos em PJeCalc, planilhas auditáveis e pareceres técnicos no padrão TRT, com retorno rápido e custo competitivo. Posso enviar amostras de trabalhos anteriores caso haja interesse.
+
+Atenciosamente,
+{{eu_nome}}
+{{eu_titulo}}</textarea>
+
+    <div class="main-actions" style="margin-top: 20px;">
+      <button class="btn primary" id="btn-save-msg">Salvar e voltar</button>
+      <button class="btn secondary" id="btn-back-from-msg">Voltar sem salvar</button>
+    </div>
+  </section>
+
+  <section class="panel hidden" id="panel-prospect">
+    <h2><span class="marker"></span>Prospecção do dia</h2>
+    <p class="helper">Os contatos abaixo estão ordenados pelos melhores primeiro (Ouro → Prata → Bronze), considerando o melhor canal disponível (email + WhatsApp). Contatos Ruim e Morto ficam escondidos automaticamente.</p>
+
+    <div class="slider-row">
+      <label>Quantos contatar hoje:</label>
+      <input type="range" id="batch-size" min="5" max="100" step="5" value="30">
+      <div class="count" id="batch-count">30</div>
+    </div>
+
+    <div class="aviso">
+      <strong>Recomendado:</strong> 30 contatos/dia personalizados (entre email + WhatsApp) rendem em média 2-4 respostas. Mais que 50 emails/dia começa a queimar reputação do seu Gmail.
+    </div>
+
+    <div class="daily-head">
+      <span>Lote do dia</span>
+      <span class="progress-info"><span id="prospect-done">0</span> contatados · <span id="prospect-total">0</span> no lote</span>
+    </div>
+
+    <div class="contact-list" id="contact-list"></div>
+
+    <div class="main-actions" style="margin-top: 24px;">
+      <button class="btn secondary" id="btn-back-from-prospect">← Voltar ao painel</button>
+    </div>
+  </section>
+
+  <footer>
+    Pós em Estratégias de Cálculo Trabalhista <span class="orn">◆</span> Prospect &amp; Cia. v3.0 <span class="orn">◆</span> 100% offline · seus dados ficam só no seu navegador
+  </footer>
+
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
