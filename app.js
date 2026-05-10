@@ -27,13 +27,13 @@ const DEFAULT_TEMPLATE_EMAIL = {
 
 Sou {{eu_nome}}, {{eu_titulo}}. Estou prospectando escritórios trabalhistas em {{cidade}}/{{uf}} para uma conversa específica sobre fase de execução, e gostaria de apresentar meu trabalho.
 
-A maior parte dos escritórios trabalhistas concentra esforço técnico na fase de conhecimento, na construção da inicial, na produção da prova e na sustentação oral. Faz sentido, é o momento em que se constrói o direito. O problema é que, transitada em julgado a sentença favorável, a fase de liquidação chega como se fosse mero trâmite operacional, e o cálculo da parte contrária é aceito sem análise técnica fundamentada.
+A maior parte dos escritórios trabalhistas concentra esforço técnico na fase de conhecimento, na construção da inicial, na produção da prova e na sustentação oral. Faz sentido, é o momento em que se constrói o direito. O problema é que, transitada em julgado a sentença favorável, a fase de liquidação chega como se fosse mero trâmite operacional, e o cálculo da parte contrária é aceito sem análise técnica fundamentada. Como o honorário de êxito é, em geral, percentual sobre o crédito apurado, todo erro a menor no cálculo se traduz diretamente em honorário a menor para o escritório.
 
-E é exatamente nessa fase que se perde parcela significativa do que foi conquistado. Erro de base de cálculo, atualização monetária aplicada com índice equivocado, FGTS sem reflexos corretos, juros calculados de forma simples quando deveriam ser compostos, integração de habituais ignorada, períodos prescritos não excluídos. Não são erros que aparecem nos manuais, são erros que só quem trabalha com cálculo todo dia identifica. E a consequência prática é dupla: o cliente recebe menos do que tinha direito, e o escritório recebe honorários proporcionalmente menores sobre um valor reduzido.
+E os erros são padronizados. A reclamada apresenta cálculo aplicando TRD onde já incidia IPCA-E, juros simples onde já era SELIC composta pós-2018, FGTS sem incidência sobre verbas habituais, prescrição quinquenal calculada da data errada, reflexos não computados em RSR, 13º, férias e aviso prévio. Não são erros que aparecem nos manuais, são erros que só quem trabalha com cálculo todo dia identifica. Sem impugnação técnica fundamentada o juiz homologa, e a partir daí a discussão fica restrita a embargos à execução e agravo de petição, instâncias em que o ônus argumentativo é muito maior e a chance de reverter cai.
 
-Há outra vertente do mesmo problema. Quando a parte adversa apresenta cálculo da liquidação, sem impugnação técnica fundamentada o juiz homologa, e a partir daí a discussão fica restrita a embargos, agravo e ação rescisória, instâncias em que o ônus argumentativo é muito maior. A janela para corrigir o cálculo é exatamente a impugnação à sentença de liquidação, e ela exige domínio técnico específico.
+Há um cenário em que isso fica especialmente crítico: quando a {{razao}} atua promovendo cumprimento de sentença individual de substituídos de ações coletivas ganhas pelo sindicato. São dezenas, às vezes centenas de cumprimentos, cada um com período próprio, função, salário base e jornada efetiva. Sem estrutura técnica para calcular um a um, o escritório acaba aceitando o cálculo padronizado da ré ou fazendo por amostragem, e o resultado é honorário fracionado para o escritório, sobre crédito fracionado para cada substituído.
 
-O que ofereço à {{razao}} é precisamente esse braço técnico. Trabalho com cálculos em PJeCalc, pareceres no padrão TRT, impugnações fundamentadas a cálculos da parte contrária, análise crítica de laudos periciais de liquidação e suporte técnico em embargos e agravos. Atendo de forma pontual (por intervenção) ou em parceria recorrente, dependendo do volume e do perfil do escritório.
+O que ofereço à {{razao}} é precisamente esse braço técnico. Trabalho com cálculos em PJeCalc, pareceres no padrão TRT, impugnações fundamentadas a cálculos da parte contrária, cálculos individualizados em lote para cumprimento coletivo, análise crítica de laudos periciais de liquidação e suporte técnico em embargos e agravos. Atendo de forma pontual (por intervenção) ou em parceria recorrente, dependendo do volume e do perfil do escritório.
 
 Caso faça sentido, posso enviar amostras de trabalhos anteriores e marcamos uma conversa rápida para entender o fluxo da {{razao}} na fase de execução.
 
@@ -92,9 +92,9 @@ const DEFAULT_TEMPLATE_WA = {
 
 Meu nome é {{eu_nome}}, sou {{eu_titulo}}.
 
-Uma pergunta direta pra {{razao}}: quando chega o cálculo da parte contrária na fase de execução, quem faz a análise técnica antes de aceitar o valor?
+Pergunta direta pra {{razao}}: quando o cálculo da reclamada chega na fase de liquidação, quem confere índice de correção, juros, base do FGTS e reflexos antes de aceitar?
 
-Pergunto porque erro de base, atualização equivocada, FGTS sem reflexos corretos e juros mal aplicados são muito mais comuns do que parecem. E sem impugnação fundamentada, o juiz homologa o cálculo da ré e o crédito do cliente cai. O escritório recebe honorário sobre um valor reduzido, e a vitória no mérito vira pagamento parcial.
+Pergunto porque a reclamada normalmente apresenta cálculo pelo menor valor possível: TRD onde já era IPCA-E, juros simples onde já era SELIC composta, FGTS sem incidência sobre habituais, prescrição quinquenal puxada pra data errada. Sem impugnação técnica fundamentada, o juiz homologa, e o crédito do cliente cai. Como o honorário de êxito é percentual sobre o crédito, o escritório recebe menos pelo mesmo trabalho que ganhou no mérito.
 
 Trabalho exatamente nessa fase. Se fizer sentido, fico à disposição pra uma conversa rápida.`,
 
@@ -102,21 +102,21 @@ Trabalho exatamente nessa fase. Se fizer sentido, fico à disposição pra uma c
 
 Meu nome é {{eu_nome}}, sou {{eu_titulo}}.
 
-Vejo com frequência um padrão entre escritórios trabalhistas: o processo é bem conduzido, a sentença sai favorável, mas quando o cálculo de liquidação chega da outra parte ele é aceito sem impugnação técnica.
+Vejo um padrão recorrente entre escritórios trabalhistas: o processo é bem conduzido na fase de conhecimento, sentença sai favorável, e quando chega a liquidação ela é tratada como trâmite operacional. O cálculo da reclamada é aceito ou impugnado superficialmente.
 
-E aí está o ponto cego. A janela pra corrigir o cálculo é a impugnação à sentença de liquidação. Depois dela, a discussão fica restrita a embargos e agravo, com ônus argumentativo muito maior. O cliente recebe menos, o honorário sobre o êxito reduz, e o escritório nem sempre identifica que isso aconteceu.
+O problema é que a janela técnica pra corrigir o cálculo é exatamente a impugnação à sentença de liquidação. Depois dela, a discussão vai pra embargos à execução e agravo de petição, instâncias em que o ônus argumentativo é muito maior e a chance de reverter cai. O cliente da {{razao}} recebe menos do que ganhou, o honorário acompanha proporcionalmente, e o escritório nem sempre identifica em qual ponto a perda aconteceu.
 
-A {{razao}} já passou por essa situação? Posso mostrar como trabalho nessa fase.`,
+Posso mostrar como estruturo a análise dessa fase?`,
 
 `Olá! Tudo certo?
 
 Meu nome é {{eu_nome}}, sou {{eu_titulo}}.
 
-Pergunta pra {{razao}}: quando o cliente chega na fase de execução, quem cuida da parte técnica dos cálculos no escritório?
+Pergunta pra {{razao}}: quando o escritório atua em ação coletiva ganha pelo sindicato e parte pro cumprimento de sentença individual dos substituídos, como é estruturado o cálculo de cada um?
 
-Esse costuma ser o ponto onde o resultado real do processo se decide. A diferença entre aceitar o cálculo da ré ou impugná-lo com fundamento técnico costuma representar parcela importante do crédito do cliente, e consequentemente do honorário do escritório.
+Esse é o ponto onde mais vejo escritório de massa perder honorário. São dezenas, às vezes centenas de cumprimentos individuais, cada um com período próprio, função, salário base e jornada efetiva. Sem estrutura técnica pra calcular um a um, o escritório acaba aceitando o cálculo padronizado da ré ou fazendo por amostragem. O resultado é que cada substituído recebe uma fração do que tinha direito, e o honorário do escritório, percentual sobre o crédito, segue a mesma fração.
 
-Trabalho com cálculos em PJeCalc, impugnações fundamentadas e pareceres no padrão TRT. Se quiser trocar uma ideia sobre como isso funciona na prática, estou à disposição.`
+Trabalho com cálculos individualizados em PJeCalc e impugnações em lote pra esse tipo de operação. Se fizer sentido, posso te mostrar como.`
   ],
 
   contabilidade: [
